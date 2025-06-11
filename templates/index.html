@@ -1,24 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Etalase Toko</title>
-  <link rel="stylesheet" href="static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekomendasi Produk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        main {
+            margin: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            font-weight: bold;
+        }
+        select, button {
+            padding: 10px;
+            margin-top: 5px;
+            width: 200px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        .recommendations {
+            margin-top: 20px;
+        }
+        .recommendations ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .recommendations li {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Rekomendasi Penataan Etalase</h1>
-    <form id="transaction-form">
-      <label for="transactions">Masukkan Transaksi (pisahkan dengan koma):</label>
-      <textarea id="transactions" placeholder="Contoh: Life Cat Pouch Dus, Life Cat Tofu - Mango, dll"></textarea>
-      <button type="submit">Dapatkan Rekomendasi</button>
-    </form>
-    <div id="recommendations" class="hidden">
-      <h2>Rekomendasi:</h2>
-      <ul id="recommendation-list"></ul>
+
+<header>
+    <h1>Rekomendasi Produk</h1>
+</header>
+
+<main>
+    <div class="form-container">
+        <form id="product-form" method="POST" action="/recommend">
+            <label for="product1">Pilih Produk 1:</label>
+            <select name="product1" id="product1">
+                <option value="">-- Pilih Produk --</option>
+                {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="product2">Pilih Produk 2:</label>
+            <select name="product2" id="product2">
+                <option value="">-- Pilih Produk --</option>
+                {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="product3">Pilih Produk 3:</label>
+            <select name="product3" id="product3">
+                <option value="">-- Pilih Produk --</option>
+                {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="product4">Pilih Produk 4:</label>
+            <select name="product4" id="product4">
+                <option value="">-- Pilih Produk --</option>
+                {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="product5">Pilih Produk 5:</label>
+            <select name="product5" id="product5">
+                <option value="">-- Pilih Produk --</option>
+                {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Dapatkan Rekomendasi</button>
+        </form>
     </div>
-  </div>
-  <script src="static/js/script.js"></script>
+
+    <div class="recommendations" id="recommendations">
+        <!-- Recommendations will be displayed here -->
+    </div>
+</main>
+
+<script>
+    document.getElementById('product-form').onsubmit = async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const response = await fetch('/recommend', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        const recommendationsDiv = document.getElementById('recommendations');
+        
+        if (response.ok) {
+            let recommendationsHtml = '<h3>Rekomendasi Produk:</h3><ul>';
+            result.recommendations.forEach(product => {
+                recommendationsHtml += `<li>${product}</li>`;
+            });
+            recommendationsHtml += '</ul>';
+            recommendationsDiv.innerHTML = recommendationsHtml;
+        } else {
+            recommendationsDiv.innerHTML = `<p style="color: red;">${result.error}</p>`;
+        }
+    };
+</script>
+
 </body>
 </html>

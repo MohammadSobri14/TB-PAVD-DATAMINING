@@ -1,4 +1,7 @@
-flask
 pandas
+streamlit
+seaborn
+matplotlib
 mlxtend
+flask
 scikit-learn
